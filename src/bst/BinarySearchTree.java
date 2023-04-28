@@ -2,6 +2,8 @@ package bst;
 
 import java.util.Stack;
 
+import org.w3c.dom.Node;
+
 public class BinarySearchTree<T extends Comparable<T>> {
 	
 	private static class BSTNode<T extends Comparable<T>>{
@@ -158,8 +160,17 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	//Traverse the tree in an inorder fashion but using a stack
 	public void inOrderStack() {
 		Stack<BSTNode<T>> in = new Stack<BSTNode<T>>();
-		
-		
+		BSTNode<T> current = root;
+		while (current != null || !in.isEmpty()) {
+			if (current != null) {
+				in.add(current);
+				current = current.leftChild;
+			} else if (current == null && !in.isEmpty()) {
+				current = in.pop();
+				System.out.print(current.data + " ");
+				current = current.rightChild;
+			}
+		}
 	}
 	
 	//Traverse the tree in an postorder fashion
@@ -188,6 +199,29 @@ public class BinarySearchTree<T extends Comparable<T>> {
 			postHelper.push(root);
 			while(!postHelper.isEmpty()) {
 				//how should post and postHelper be updated?
+				if (root != null) {
+					post.push(root);
+					if (root.leftChild != null)
+					postHelper.push(root.leftChild);
+					postHelper.push(root.rightChild);
+				}
+				if (!postHelper.isEmpty())
+					root = postHelper.pop();
+				/*
+				if (root != null) {
+					postHelper.push(root.leftChild);
+					postHelper.push(root.rightChild);
+					root = root.leftChild;
+				}
+				else if (root == null || !postHelper.isEmpty()) {
+					root = postHelper.pop();
+					if (root != null) { 
+						post.push(root);
+						//postHelper.push(root);
+						root = root.rightChild;
+					}
+				}
+				*/
 			}
 			
 			while(!post.isEmpty()) {
